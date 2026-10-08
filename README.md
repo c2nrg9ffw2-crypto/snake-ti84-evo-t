@@ -8,6 +8,7 @@ A colour Snake game for the **TI-84 Evo-T** graphing calculator, written in Pyth
 ## Features
 
 - Eat the red food to grow
+- A blue wall shows exactly where the map ends
 - The snake gets faster as it grows
 - **High score** that stays saved after you quit
 - Start screen, pause and "play again"

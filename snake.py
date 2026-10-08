@@ -10,7 +10,8 @@ except:
     SW, SH = 320, 240
 
 # Keep every box inside the screen and never stop the game over one box
-# (the Evo gave "Height cannot be negative" for a box near the edge)
+# (the Evo gave "Height cannot be negative" for a box near the edge).
+# The Evo draws boxes 1 pixel too small, so we ask for 1 pixel more.
 def fill_rect(x, y, w, h):
     if x < 0:
         w, x = w + x, 0
@@ -19,7 +20,7 @@ def fill_rect(x, y, w, h):
     w, h = min(w, SW - x), min(h, SH - y)
     if w > 0 and h > 0:
         try:
-            ti_fill_rect(x, y, w, h)
+            ti_fill_rect(x, y, w + 1, h + 1)
         except:
             pass
 # Draw in a hidden buffer and show the finished picture at once: no flicker
@@ -63,8 +64,10 @@ QUIT = (9, 45)                # clear
 
 C = 10                        # cell size in pixels
 TOP = 30                      # height of the score bar
-GW, GH = SW // C, (SH - TOP) // C
+WALL = 3                      # thickness of the blue wall
+GW, GH = (SW - 2 * WALL) // C, (SH - TOP - 2 * WALL) // C
 X0 = (SW - GW * C) // 2
+Y0 = TOP + (SH - TOP - GH * C) // 2
 BLACK = (0, 0, 0)
 BODY = (0, 170, 0)
 HEAD = (120, 255, 120)
@@ -76,7 +79,7 @@ def paint():
 
 def cell(x, y, col):
     set_color(*col)
-    fill_rect(X0 + x * C, TOP + y * C, C - 1, C - 1)
+    fill_rect(X0 + x * C, Y0 + y * C, C - 1, C - 1)
 
 # Wipe the whole bar (tall letters leave nothing behind), then write
 def bar(s):
@@ -156,8 +159,11 @@ def game(best):
     clear()
     set_color(0, 0, 0)
     fill_rect(0, 0, SW, SH)
-    set_color(90, 90, 90)
-    fill_rect(0, TOP - 2, SW, 1)
+    set_color(40, 90, 230)                 # blue wall: the real edge of the map
+    fill_rect(X0 - WALL, Y0 - WALL, GW * C + 2 * WALL, WALL)
+    fill_rect(X0 - WALL, Y0 + GH * C, GW * C + 2 * WALL, WALL)
+    fill_rect(X0 - WALL, Y0, WALL, GH * C)
+    fill_rect(X0 + GW * C, Y0, WALL, GH * C)
     grid = bytearray(GW * GH)              # 1 = snake is here
     snake = [(GW // 2 - 2 + i, GH // 2) for i in range(3)]   # tail ... head
     for x, y in snake:
