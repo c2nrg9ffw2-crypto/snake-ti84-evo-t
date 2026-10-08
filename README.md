@@ -30,8 +30,9 @@ A colour Snake game for the **TI-84 Evo-T** graphing calculator, written in Pyth
 3. Open **https://connectevo.ti.com** in **Chrome** or **Edge**.
 4. Connect to your calculator in the page and allow access when the browser asks.
 5. Drag `snake.py` onto the page to send it to the calculator.
-6. **Choose RAM, not Archive.**
-   The Python app on the Evo-T does not show files that are in Archive.
+6. **Choose RAM** to play right away.
+   The Python app on the Evo-T only shows files that are in RAM.
+   (Want to keep the game safe? See [Don't lose the game](#dont-lose-the-game).)
 
 > **Already sent it to Archive?** On the calculator press **2nd → mem → Mem Management**,
 > find **SNAKE** and press **enter**. The `*` in front of the name disappears, which means
@@ -42,6 +43,21 @@ A colour Snake game for the **TI-84 Evo-T** graphing calculator, written in Pyth
 1. Open the **Python** app on the calculator.
 2. Choose **SNAKE** and run it.
 3. Press **enter** on the start screen.
+
+## Don't lose the game
+
+The Evo-T **deletes RAM** when it stays turned off for a while.
+A normal turn-off is fine, but after some time the game is gone.
+
+**Best way:**
+
+1. Keep the game in **Archive**. Archive is never deleted.
+2. Before playing, press **2nd → mem → Mem Management**, find **SNAKE** and press **enter**.
+   The `*` disappears, which means the game is now in RAM.
+3. Open the **Python** app and play.
+
+Programs can't move files between Archive and RAM by themselves, so this step can't be automatic.
+The high score list **SNAKE** is in RAM too, so it can be deleted the same way.
 
 ## Keys
 
@@ -66,6 +82,5 @@ The best score is saved in a calculator list called **SNAKE**, so it stays after
 
 ## Good to know
 
-- Files in RAM are deleted when the calculator resets. Keep `snake.py` on your computer
-  so you can send it again.
+- Keep `snake.py` on your computer too, so you can always send it again.
 - Made for the TI-84 Evo-T. Other TI-84 models are not tested.
