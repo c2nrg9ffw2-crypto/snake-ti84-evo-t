@@ -103,16 +103,21 @@ def wait_for(keys):
             return k
         sleep(0.05)
 
-# High score lives in the calculator list SNAKE, so it stays after quitting
+# Speeds: name, steps per move at the start, fewest steps per move (fastest)
+SPEEDS = [("Slow", 7, 2), ("Normal", 5, 2), ("Fast", 3, 1)]
+
+# High scores live in the calculator list SNAKE: [slow, normal, fast].
+# (An old list with 1 number becomes the Slow high score.)
 def load_best():
     try:
-        return int(recall_list("SNAKE")[0])
+        l = [int(v) for v in recall_list("SNAKE")]
     except:
-        return 0
+        l = []
+    return (l + [0, 0, 0])[:3]
 
-def save_best(n):
+def save_best(bests):
     try:
-        store_list("SNAKE", [n])
+        store_list("SNAKE", bests)
     except:
         pass
 
@@ -138,24 +143,36 @@ def place_food(grid):
                 return (x, y)
     return None
 
-def start_screen(best):
+# Returns the chosen speed (0 slow, 1 normal, 2 fast), or -1 to quit
+def start_screen(bests):
     clear()
     set_color(0, 0, 0)
     fill_rect(0, 0, SW, SH)
-    x = SW // 2 - 70
+    x = SW // 2 - 80
     set_color(*HEAD)
-    draw_text(x + 40, 20, "SNAKE")
+    draw_text(x + 50, 20, "SNAKE")
     set_color(255, 255, 255)
-    draw_text(x, 45, "Best " + str(best))
-    help = ["ARROWS: turn", "Eat red food", "Don't hit walls",
-            "or yourself!", "2ND: pause", "CLEAR: quit"]
-    for i in range(len(help)):
-        draw_text(x, 72 + i * 20, help[i])
-    set_color(230, 200, 0)
-    draw_text(x, 195, "ENTER: start")
-    return wait_for(OK + QUIT) in OK
+    draw_text(x, 45, "Eat food, avoid walls")
+    draw_text(x, 202, "UP/DOWN + ENTER")
+    choice = 0
+    while True:
+        for i in range(3):
+            set_color(0, 0, 0)
+            fill_rect(x - 20, 64 + i * 28, 220, 27)
+            set_color(*((230, 200, 0) if i == choice else (150, 150, 150)))
+            draw_text(x, 90 + i * 28, ("> " if i == choice else "  ") + SPEEDS[i][0]
+                      + "   best " + str(bests[i]))
+        k = wait_for(UP + DOWN + OK + QUIT)
+        if k in QUIT:
+            return -1
+        if k in OK:
+            return choice
+        if k in UP:
+            choice = (choice - 1) % 3
+        if k in DOWN:
+            choice = (choice + 1) % 3
 
-def game(best):
+def game(best, speed):
     clear()
     set_color(0, 0, 0)
     fill_rect(0, 0, SW, SH)
@@ -173,7 +190,8 @@ def game(best):
     d, turns = (1, 0), []
     food = place_food(grid)
     cell(food[0], food[1], FOOD)
-    score, delay, t = 0, 7, 0
+    name, slowest, fastest = SPEEDS[speed]
+    score, delay, t = 0, slowest, 0
     bar("Score 0    Best " + str(best))
     paint()
     while True:
@@ -216,7 +234,7 @@ def game(best):
             cell(nx, ny, HEAD)
             if eat:
                 score += 10
-                delay = max(2, 7 - score // 60)   # faster as you grow
+                delay = max(fastest, slowest - score // 60)   # faster as you grow
                 food = place_food(grid)
                 if food is None:
                     break                  # board full: you win!
@@ -229,19 +247,19 @@ def game(best):
     return score, False
 
 # --- start ---
-best = load_best()
-if start_screen(best):
-    while True:
-        score, quit = game(best)
-        if score > best:
-            best = score
-            save_best(best)
-            title = "NEW BEST!"
-        else:
-            title = "GAME OVER"
-        if quit:
-            break
-        box([title, "Score " + str(score), "ENTER: again", "CLEAR: quit"])
-        if wait_for(OK + QUIT) in QUIT:
-            break
+bests = load_best()
+speed = start_screen(bests)
+while speed >= 0:
+    score, quit = game(bests[speed], speed)
+    if score > bests[speed]:
+        bests[speed] = score
+        save_best(bests)
+        title = "NEW BEST!"
+    else:
+        title = "GAME OVER"
+    if quit:
+        break
+    box([title, "Score " + str(score), "ENTER: again", "CLEAR: quit"])
+    if wait_for(OK + QUIT) in QUIT:
+        break
 paint()

@@ -9,8 +9,9 @@ A colour Snake game for the **TI-84 Evo-T** graphing calculator, written in Pyth
 
 - Eat the red food to grow
 - A blue wall shows exactly where the map ends
+- **3 speeds:** Slow, Normal and Fast
 - The snake gets faster as it grows
-- **High score** that stays saved after you quit
+- A **high score for each speed** that stays saved after you quit
 - Start screen, pause and "play again"
 - Quick turns are remembered, so fast key presses still work
 - No flicker
@@ -42,7 +43,7 @@ A colour Snake game for the **TI-84 Evo-T** graphing calculator, written in Pyth
 
 1. Open the **Python** app on the calculator.
 2. Choose **SNAKE** and run it.
-3. Press **enter** on the start screen.
+3. Choose **Slow**, **Normal** or **Fast** with ▲ ▼ and press **enter**.
 
 ## Don't lose the game
 
@@ -70,6 +71,16 @@ The high score list **SNAKE** is in RAM too, so it can be deleted the same way.
 | 2nd or mode | Pause (2nd or enter to go on) |
 | clear | Quit |
 
+## Speeds
+
+| Speed | How fast |
+|---|---|
+| Slow | The original speed |
+| Normal | A bit faster |
+| Fast | Even faster, and at its fastest the snake moves every step |
+
+All speeds get faster as the snake grows.
+
 ## Rules
 
 - Each food gives **10 points**.
@@ -78,7 +89,8 @@ The high score list **SNAKE** is in RAM too, so it can be deleted the same way.
 
 ## High score
 
-The best score is saved in a calculator list called **SNAKE**, so it stays after you quit.
+The best score for each speed is saved in a calculator list called **SNAKE**
+(Slow, Normal, Fast), so it stays after you quit. The start screen shows all three.
 
 - To reset the high score, delete the list **SNAKE** in **2nd → mem → Mem Management** (on the home screen).
 - A calculator reset (RAM clear) also resets it.
